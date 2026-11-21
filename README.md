@@ -1,8 +1,10 @@
-<H3>Name</H3>
-<H3>Register no.</H3>
-<H3>Date</H3>
+<H3>Name: Samakash R S</H3>
+<H3>Register no. 212223230182 </H3>
+<H3>Date: 15/11/2026 </H3>
 <H3>Experiment No. 2 </H3>
-## Implementation of Perceptron for Binary Classification
+
+
+# Implementation of Perceptron for Binary Classification
 # AIM:
 To implement a perceptron for classification using Python<BR>
 
@@ -49,11 +51,112 @@ STEP 9:For ‘N ‘ iterations ,do the following:<BR>
 STEP 10:Plot the error for each iteration <BR>
 STEP 11:Print the accuracy<BR>
 # PROGRAM:
-    ''' Insert your code here '''
+   
+~~~
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+# The dataset has no header, so we define column names manually
+column_names = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+df = pd.read_csv("/content/pima-indians-diabetes.csv", names=column_names)
+
+# Using 'Age' and 'Glucose' as features, and 'Outcome' (0 or 1) as target
+X = df[['Age', 'Glucose']].values
+y = df['Outcome'].values
+
+plt.figure(figsize=(8, 5))
+
+plt.scatter(X[y == 0, 0], X[y == 0, 1],
+            color='blue', label='No Diabetes')
+
+plt.scatter(X[y == 1, 0], X[y == 1, 1],
+            color='red', label='Diabetes')
+
+plt.xlabel("Age")
+plt.ylabel("Glucose")
+plt.title("Pima Indians Diabetes Dataset")
+plt.legend()
+plt.show()
+
+
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+
+Y_train = np.where(y_train == 0, -1, 1)
+Y_test = np.where(y_test == 0, -1, 1)
+
+
+W = np.zeros(X_train.shape[1])
+b = 0.0
+
+
+learning_rate = 0.01
+epochs = 100
+
+
+errors = []
+
+for epoch in range(epochs):
+    total_errors = 0
+
+    for i in range(len(X_train)):
+
+
+        v = np.dot(W, X_train[i]) + b
+
+
+        t = 1 if v >= 0 else -1
+
+
+        if t != Y_train[i]:
+            W = W + learning_rate * Y_train[i] * X_train[i]
+            b = b + learning_rate * Y_train[i]
+            total_errors += 1
+
+    errors.append(total_errors)
+
+
+plt.figure(figsize=(8, 5))
+plt.plot(range(1, epochs + 1), errors, marker='o')
+plt.xlabel("Epoch")
+plt.ylabel("Number of Misclassifications")
+plt.title("Perceptron Training Error")
+plt.grid(True)
+plt.show()
+
+
+def predict(X):
+    net = np.dot(X, W) + b
+    return np.where(net >= 0, 1, -1)
+
+Y_pred = predict(X_test)
+
+
+y_pred = np.where(Y_pred == -1, 0, 1)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Final Weight Vector:", W)
+print("Final Bias:", b)
+print("Number of Epochs:", epochs)
+print("Test Accuracy:", accuracy * 100, "%")
+~~~
 # OUTPUT:
 
-    ''' Show your result '''
+ <img width="877" height="443" alt="image" src="https://github.com/user-attachments/assets/9ff10f7b-e5c2-4f31-b91f-7bf675babd36" />
+<img width="831" height="523" alt="image" src="https://github.com/user-attachments/assets/12d0af2d-f285-4834-938e-0a3ff5c6d505" />
+
 
 # RESULT:
  Thus, a single layer perceptron model is implemented using python to classify Iris data set.
